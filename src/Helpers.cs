@@ -44,7 +44,7 @@ namespace InventoryEquippables
             return null;
         }
 
-        public static bool HasButtonHighLight(string itemUID)
+        public static bool HasButtonHighlight(string itemUID)
         {
             return CreatedHighlightButtons.ContainsKey(itemUID);
         }
@@ -59,7 +59,7 @@ namespace InventoryEquippables
             return null;
         }
 
-        public static void DestroyButtonHighLight(string itemUID)
+        public static void DestroyButtonHighlight(string itemUID)
         {
             if (CreatedHighlightButtons.ContainsKey(itemUID))
             {

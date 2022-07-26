@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace InventoryEquippables
 {
-    public class PlayerInventoryEquippableComponent : MonoBehaviour
+    public class InventoryEquippableComp : MonoBehaviour
     {
         public Item EquippedItem { get; private set; }
         public BaseInventoryEquippable EquippedInventoryEquippable => EquippedItem.GetComponent<BaseInventoryEquippable>();
@@ -23,6 +23,12 @@ namespace InventoryEquippables
                 EquippedInventoryEquippable.OnEquip(ParentCharacter);
                 ParentCharacter.CharacterUI.ShowInfoNotification("Equipped");
             }
+
+
+            if (!Helpers.HasButtonHighlight(EquippedItem.UID))
+            {
+                Helpers.CreateButtonHighlight(EquippedItem.UID, EquippedItem.m_refItemDisplay, EquippedInventoryEquippable.EquippableBorderColor, new Vector2(5, 5), EquippedItem.m_refItemDisplay.transform);
+            }
         }
         
         public void UnEquip()
@@ -31,6 +37,11 @@ namespace InventoryEquippables
             {
                 EquippedInventoryEquippable.OnUnEquip(ParentCharacter);
                 ParentCharacter.CharacterUI.ShowInfoNotification("UnEquipped");
+            }
+
+            if (Helpers.HasButtonHighlight(EquippedItem.UID))
+            {
+                Helpers.DestroyButtonHighlight(EquippedItem.UID);
             }
 
             EquippedItem = null;

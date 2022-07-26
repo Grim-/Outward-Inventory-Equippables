@@ -21,6 +21,7 @@
                     RemoveEnergy(EnergyTakenPerTick);
                 }
             }
+
         }
 
         //do soemthing every tick

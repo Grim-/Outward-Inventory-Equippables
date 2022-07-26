@@ -340,11 +340,13 @@
   <ItemGroup>
     <Compile Include="Components\BaseInventoryEquippable.cs" />
     <Compile Include="Components\BaseChargedEquippable.cs" />
+    <Compile Include="CustomItemDisplayMenuOption.cs" />
     <Compile Include="EquipVisualInformation.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ExampleEquippableMod.cs" />
-    <Compile Include="InventoryEquippablePatches.cs" />
-    <Compile Include="Components\PlayerInventoryEquippableComponent.cs" />
+    <Compile Include="Patches\InventoryEquippablePatches.cs" />
+    <Compile Include="Components\InventoryEquippableComp.cs" />
+    <Compile Include="Patches\CharacterPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Components\YourChargeBasedEquippable.cs" />
     <Compile Include="Components\YourEquippableType.cs" />

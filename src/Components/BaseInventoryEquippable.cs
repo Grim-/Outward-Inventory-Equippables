@@ -27,6 +27,8 @@ namespace InventoryEquippables
 
         }
 
+        #region Equippable Methods
+
         public virtual void OnEquip(Character CharacterToEquip)
         {
             EquippedCharacter = CharacterToEquip;
@@ -36,18 +38,48 @@ namespace InventoryEquippables
             {
                 CreateEquipVisual();
             }
+
+
+            if (!Helpers.HasButtonHighlight(ParentItem.UID))
+            {
+                Helpers.CreateButtonHighlight(ParentItem.UID, ParentItem.m_refItemDisplay, EquippableBorderColor, new UnityEngine.Vector2(5, 5));
+            }
         }
 
         public virtual void OnUnEquip(Character CharacterToEquip)
         {
+            if (Helpers.HasButtonHighlight(ParentItem.UID))
+            {
+                Helpers.DestroyButtonHighlight(ParentItem.UID);
+            }
+
             EquippedCharacter = null;
         }
-
 
         public virtual void Update()
         {
             if (!IsEquipped) return;
         }
+
+
+        #endregion
+
+
+
+        #region Character Events and Methods
+
+        public virtual void OnStatusEffectAdded(StatusEffect Status)
+        {
+
+        }
+
+        public virtual void OnStatusEffectRemoved(StatusEffect Status)
+        {
+
+        }
+
+        #endregion
+
 
         private GameObject CreateEquipVisual()
         {
