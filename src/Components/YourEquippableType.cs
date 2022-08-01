@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 namespace InventoryEquippables
 {
     //You extend from BaseInventoryEquippable and override the methods to do *stuff* on equip, what this is, is upto you!
-    public class YourEquippableType : BaseInventoryEquippable
+    public class YourEquippableType : InventoryEquippable
     {
-        public override void OnEquip(Character CharacterToEquip)
+        public override void OnEquipped(Character CharacterToEquip)
         {
-            base.OnEquip(CharacterToEquip);
+            base.OnEquipped(CharacterToEquip);
         }
 
-        public override void OnUnEquip(Character CharacterToEquip)
+        public override void OnUnEquipped(Character CharacterToEquip)
         {
-            base.OnUnEquip(CharacterToEquip);
+            base.OnUnEquipped(CharacterToEquip);
         }
     }
 }

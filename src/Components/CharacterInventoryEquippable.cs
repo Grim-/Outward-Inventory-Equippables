@@ -7,10 +7,11 @@ using UnityEngine;
 
 namespace InventoryEquippables
 {
-    public class InventoryEquippableComp : MonoBehaviour
+    //Character component that holds reference to active Equippable
+    public class CharacterInventoryEquippable : MonoBehaviour
     {
         public Item EquippedItem { get; private set; }
-        public BaseInventoryEquippable EquippedInventoryEquippable => EquippedItem.GetComponent<BaseInventoryEquippable>();
+        public InventoryEquippable EquippedInventoryEquippable => EquippedItem.GetComponent<InventoryEquippable>();
         public Character ParentCharacter => gameObject.GetComponent<Character>();
         public bool HasEquipped => EquippedItem != null ? true : false;
 
@@ -20,8 +21,8 @@ namespace InventoryEquippables
 
             if (EquippedItem != null && EquippedInventoryEquippable != null)
             {
-                EquippedInventoryEquippable.OnEquip(ParentCharacter);
-                ParentCharacter.CharacterUI.ShowInfoNotification("Equipped");
+                EquippedInventoryEquippable.OnEquipped(ParentCharacter);
+                //ParentCharacter.CharacterUI.ShowInfoNotification("Equipped");
             }
 
 
@@ -35,8 +36,8 @@ namespace InventoryEquippables
         {
             if (EquippedItem != null && EquippedInventoryEquippable != null)
             {
-                EquippedInventoryEquippable.OnUnEquip(ParentCharacter);
-                ParentCharacter.CharacterUI.ShowInfoNotification("UnEquipped");
+                EquippedInventoryEquippable.OnUnEquipped(ParentCharacter);
+                //ParentCharacter.CharacterUI.ShowInfoNotification("UnEquipped");
             }
 
             if (Helpers.HasButtonHighlight(EquippedItem.UID))

@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using InventoryEquippables.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace InventoryEquippables.Patches
     {
         static void Postfix(CharacterInventory __instance, Item _item, Transform _newParent = null, bool _playAnim = true)
         {
-            InventoryEquippableComp equippableComponent = __instance.m_character.gameObject.GetComponentInParent<InventoryEquippableComp>();
+            CharacterInventoryEquippable equippableComponent = __instance.m_character.gameObject.GetComponentInParent<CharacterInventoryEquippable>();
 
             if (equippableComponent != null && equippableComponent.HasEquipped && equippableComponent.EquippedItem == _item)
             {
@@ -32,23 +33,27 @@ namespace InventoryEquippables.Patches
     {
         static void Postfix(Character __instance)
         {
-            if (__instance.IsLocalPlayer) __instance.gameObject.AddComponent<InventoryEquippableComp>();
+            __instance.gameObject.AddComponent<CharacterInventoryEquippable>();
         }
     }
+
+
+    #region Status
 
     [HarmonyPatch(nameof(StatusEffectManager.AddStatusEffect))]
     public class StatusEffectManagerOnStatusAdded
     {
         static void StatusEffectManager_OnStatusAddeddPrefix(StatusEffectManager __instance, string _statusPrefabName, string[] _splitData)
         {
-            InventoryEquippableComp equippableComponent = __instance.m_character.GetComponent<InventoryEquippableComp>();
+            IEquipmentReactions[] equipmentReactions = __instance.m_character.GetComponentsInChildren<IEquipmentReactions>();
 
-            if (equippableComponent != null && equippableComponent.HasEquipped)
+            StatusEffect statusEffect = ResourcesPrefabManager.Instance.GetStatusEffectPrefab(_statusPrefabName);
+
+            if (statusEffect)
             {
-                StatusEffect statusEffect = ResourcesPrefabManager.Instance.GetStatusEffectPrefab(_statusPrefabName);
-                if (statusEffect)
+                foreach (var equipmentReaction in equipmentReactions)
                 {
-                    equippableComponent.EquippedInventoryEquippable.OnStatusEffectAdded(statusEffect);
+                    equipmentReaction.OnStatusEffectAdded(statusEffect);
                 }
             }
         }
@@ -59,19 +64,21 @@ namespace InventoryEquippables.Patches
     {
         static void StatusEffectManager_OnStatusRemovedPrefix(StatusEffectManager __instance, string _uid)
         {
-            InventoryEquippableComp equippableComponent = __instance.m_character.GetComponent<InventoryEquippableComp>();
+            IEquipmentReactions[] equipmentReactions = __instance.m_character.GetComponentsInChildren<IEquipmentReactions>();
 
-            if (equippableComponent != null && equippableComponent.HasEquipped)
+            StatusEffect statusEffect = null;
+            if (__instance.m_statuses.TryGetValue(_uid, out statusEffect))
             {
-                StatusEffect statusEffect = null;
-                if (__instance.m_statuses.TryGetValue(_uid, out statusEffect))
+                if (statusEffect)
                 {
-                    if (statusEffect)
+                    foreach (var equipmentReaction in equipmentReactions)
                     {
-                        equippableComponent.EquippedInventoryEquippable.OnStatusEffectRemoved(statusEffect);
+                        equipmentReaction.OnStatusEffectRemoved(statusEffect);
                     }
                 }
             }
         }
     }
+
+    #endregion
 }

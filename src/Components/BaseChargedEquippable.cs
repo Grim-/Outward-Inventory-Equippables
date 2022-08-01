@@ -2,7 +2,7 @@
 
 namespace InventoryEquippables
 {
-    public class BaseChargedEquippable : BaseInventoryEquippable
+    public class BaseChargedEquippable : InventoryEquippable
     {
         public float CurrentCharge { get; private set; }
         public virtual float MaximumCharge => 100f;
@@ -10,32 +10,35 @@ namespace InventoryEquippables
         public virtual float EnergyTakenPerTick => 10f;
 
         private float CurrentTimer = 0;
+
+
         public override void Awake()
         {
             base.Awake();
-
-            CurrentCharge = MaximumCharge;
+            RestoreCharge();
         }
-
-
 
         public override void Update()
         {
             base.Update();
-            CurrentTimer += Time.deltaTime;
-            if (IsEquipped && CurrentTimer >= TickTime)
+
+            if (IsEquipped)
             {
-                OnTick();
-                CurrentTimer = 0;
+                CurrentTimer += Time.deltaTime;
+                if (CurrentTimer >= TickTime)
+                {
+                    OnTick();
+                    CurrentTimer = 0;
+                }
             }
         }
 
         public virtual void OnTick()
         {
-           
+            if (!IsEquipped) return;
         }
 
-        public void AddEnergy(float amount)
+        public void AddCharge(float amount)
         {
             CurrentCharge += amount;
 
@@ -47,7 +50,7 @@ namespace InventoryEquippables
             }
         }
 
-        public void RemoveEnergy(float amount)
+        public void RemoveCharge(float amount)
         {
             CurrentCharge -= amount;
 
@@ -60,10 +63,10 @@ namespace InventoryEquippables
         }
 
         ///generally used if you plan to save the equippable data, in this case the energy level would need restoring to whatever it was at save time
-        public void SetEnergyLevel(float amount)
+        public void SetChargeLevel(float amount)
         {
             CurrentCharge = 0;
-            AddEnergy(amount);
+            AddCharge(amount);
         }
 
 
@@ -80,6 +83,11 @@ namespace InventoryEquippables
         public bool HasEnoughEnergy(float EnergyRequired)
         {
             return CurrentCharge >= EnergyRequired;
+        }
+
+        public void RestoreCharge()
+        {
+            AddCharge(MaximumCharge);
         }
     }
 }

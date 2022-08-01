@@ -18,8 +18,8 @@ namespace InventoryEquippables
         public const string NAME = "MyMod";
         public const string VERSION = "1.0.0";
         internal static ManualLogSource Log;
-
-        public Dictionary<int, CustomItemDisplayMenuOption> CustomItemOptions { get; private set; }
+        public bool ActionsAdded = false;
+        public static Dictionary<int, CustomItemDisplayMenuOption> CustomItemOptions { get; private set; }
 
         public static ExampleEquippableMod Instance { get; private set; }
 
@@ -31,10 +31,7 @@ namespace InventoryEquippables
             Instance = this;
             SL.OnPacksLoaded += SL_OnPacksLoaded;
 
-            // Harmony is for patching methods. If you're not patching anything, you can comment-out or delete this line.
-
-
-            RegisterCustomMenuOption(9090, "Equip TEST", "UnEquip TEST", OnCustomActionPress);
+            RegisterCustomMenuOption(90190, "Equip TEST", "UnEquip TEST", ToggleEquipAction);
             new Harmony(GUID).PatchAll();
         }
 
@@ -52,7 +49,7 @@ namespace InventoryEquippables
             TestItem.ApplyTemplate();
 
            Item TestItemPrefab = ResourcesPrefabManager.Instance.GetItemPrefab(-19500);
-           TestItemPrefab.gameObject.AddComponent<YourChargeBasedEquippable>();
+           TestItemPrefab.gameObject.AddComponent<ChargedEquippable>();
         }
 
 
@@ -60,7 +57,7 @@ namespace InventoryEquippables
         {
             if (!CustomItemOptions.ContainsKey(newCustomID))
             {
-                CustomItemOptions.Add(newCustomID, new CustomItemDisplayMenuOption(newCustomID, EquipString, UnEquipString, OnCustomActionPressed));
+                CustomItemOptions.Add(newCustomID, new CustomItemDisplayMenuOption(newCustomID, EquipString, UnEquipString, OnCustomActionPressed, ShouldAddCustomAction));
             }
             else
             {
@@ -68,9 +65,21 @@ namespace InventoryEquippables
             }
         }
 
-        public void OnCustomActionPress(Character Character, Item CurrentItem, ItemDisplayOptionPanel ItemPanelInstance, int ActionID)
+        private bool ShouldAddCustomAction(Character Character, Item CurrentItem, ItemDisplayOptionPanel ItemPanelInstance, int ActionID)
         {
-            InventoryEquippableComp equippableComponent = Character.GetComponent<InventoryEquippableComp>();
+            CharacterInventoryEquippable equippableComponent = Character.GetComponent<CharacterInventoryEquippable>();
+
+            if (equippableComponent)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ToggleEquipAction(Character Character, Item CurrentItem, ItemDisplayOptionPanel ItemPanelInstance, int ActionID)
+        {
+            CharacterInventoryEquippable equippableComponent = Character.GetComponent<CharacterInventoryEquippable>();
 
             //If there's no artifact currently equipped and the artifact component exists
             if (equippableComponent != null && !equippableComponent.HasEquipped)

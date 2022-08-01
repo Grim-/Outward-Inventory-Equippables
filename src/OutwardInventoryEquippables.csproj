@@ -338,17 +338,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\BaseInventoryEquippable.cs" />
+    <Compile Include="Components\InventoryEquippable.cs" />
     <Compile Include="Components\BaseChargedEquippable.cs" />
     <Compile Include="CustomItemDisplayMenuOption.cs" />
     <Compile Include="EquipVisualInformation.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ExampleEquippableMod.cs" />
+    <Compile Include="Structs\DamageDoneEvent.cs" />
+    <Compile Include="Structs\DamageTakenEvent.cs" />
+    <Compile Include="Interfaces\IEquipmentReactions.cs" />
+    <Compile Include="Interfaces\IWeaponReactions.cs" />
     <Compile Include="Patches\InventoryEquippablePatches.cs" />
-    <Compile Include="Components\InventoryEquippableComp.cs" />
+    <Compile Include="Components\CharacterInventoryEquippable.cs" />
     <Compile Include="Patches\CharacterPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Components\YourChargeBasedEquippable.cs" />
+    <Compile Include="Components\ChargedEquippable.cs" />
     <Compile Include="Components\YourEquippableType.cs" />
   </ItemGroup>
   <ItemGroup>
